@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배드민턴 라켓 MBTI 추천 시스템 v5.0</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap');
+        body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .glass-morphism { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .card-active { border-color: #2563eb; background-color: #eff6ff; transform: translateY(-2px); }
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div id="app" class="w-full max-w-2xl glass-morphism rounded-[2.5rem] shadow-2xl overflow-hidden p-6 md:p-10 border border-slate-200">
+        
+        <!-- 메인 화면 -->
+        <div id="main-view" class="fade-in">
+            <div class="text-center mb-10">
+                <div class="inline-block bg-blue-100 text-blue-600 px-4 py-1.5 rounded-full text-sm font-bold mb-4 tracking-tight uppercase">v5.0 Update</div>
+                <h1 class="text-4xl font-extrabold text-slate-900 mb-4 leading-tight">배드민턴 라켓 MBTI</h1>
+                <p class="text-slate-500 font-medium break-keep">나의 밸런스와 샤프트 성향을 선택하고<br>최적의 인생 라켓을 찾아보세요.</p>
+            </div>
+
+            <div class="space-y-8">
+                <!-- 1. 헤드 밸런스 선택 -->
+                <div>
+                    <label class="block text-sm font-extrabold text-slate-400 uppercase tracking-widest mb-4">1. 선호하는 밸런스</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="selectOption('balance', 'head-heavy', this)" class="option-btn border-2 border-slate-100 p-4 rounded-2xl transition-all hover:bg-slate-50 flex flex-col items-center gap-2">
+                            <i class="fas fa-shuttlecock text-red-500"></i>
+                            <span class="font-bold text-sm">헤드헤비</span>
+                        </button>
+                        <button onclick="selectOption('balance', 'even', this)" class="option-btn border-2 border-slate-100 p-4 rounded-2xl transition-all hover:bg-slate-50 flex flex-col items-center gap-2">
+                            <i class="fas fa-shuttlecock text-blue-500 rotate-45"></i>
+                            <span class="font-bold text-sm">이븐</span>
+                        </button>
+                        <button onclick="selectOption('balance', 'head-light', this)" class="option-btn border-2 border-slate-100 p-4 rounded-2xl transition-all hover:bg-slate-50 flex flex-col items-center gap-2">
+                            <i class="fas fa-shuttlecock text-emerald-500 rotate-90"></i>
+                            <span class="font-bold text-sm">헤드라이트</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 2. 샤프트 강도 선택 -->
+                <div>
+                    <label class="block text-sm font-extrabold text-slate-400 uppercase tracking-widest mb-4">2. 샤프트 강도 (손목 힘)</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="selectOption('stiffness', 'stiff', this)" class="option-btn border-2 border-slate-100 p-4 rounded-2xl transition-all hover:bg-slate-50 flex flex-col items-center gap-2">
+                            <span class="font-bold text-sm">단단함</span>
+                        </button>
+                        <button onclick="selectOption('stiffness', 'medium', this)" class="option-btn border-2 border-slate-100 p-4 rounded-2xl transition-all hover:bg-slate-50 flex flex-col items-center gap-2">
+                            <span class="font-bold text-sm">중간</span>
+                        </button>
+                        <button onclick="selectOption('stiffness', 'flexible', this)" class="option-btn border-2 border-slate-100 p-4 rounded-2xl transition-all hover:bg-slate-50 flex flex-col items-center gap-2">
+                            <span class="font-bold text-sm">부드러움</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="calculateResult()" class="w-full mt-12 py-5 bg-slate-900 text-white rounded-2xl font-extrabold text-xl shadow-lg hover:bg-black transition-all active:scale-95">
+                추천 결과 보기
+            </button>
+        </div>
+
+        <!-- 결과 화면 -->
+        <div id="result-view" class="hidden fade-in">
+            <button onclick="resetApp()" class="mb-6 text-slate-400 font-bold text-sm hover:text-slate-600">
+                <i class="fas fa-arrow-left mr-2"></i> 다시 선택하기
+            </button>
+            
+            <div class="text-center mb-8">
+                <h2 class="text-slate-500 font-bold mb-1">당신에게 어울리는 라켓은</h2>
+                <div id="res-title" class="text-3xl font-black text-slate-900 leading-tight">모델명</div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- 프리미엄 라인 -->
+                <div class="bg-white border border-slate-200 rounded-3xl p-6 shadow-sm">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">Premium Line</span>
+                    </div>
+                    <div id="res-premium" class="text-xl font-bold text-slate-800 mb-2 leading-snug">-</div>
+                    <p id="res-desc" class="text-slate-500 text-sm leading-relaxed break-keep">-</p>
+                </div>
+
+                <!-- 가성비 라인 -->
+                <div class="bg-slate-50 rounded-3xl p-6 border border-slate-100">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="bg-emerald-500 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase">Budget Friendly</span>
+                    </div>
+                    <div id="res-budget" class="text-xl font-bold text-slate-700">-</div>
+                </div>
+            </div>
+
+            <div class="mt-8 p-5 bg-blue-50 rounded-2xl border border-blue-100">
+                <div class="flex items-start gap-3">
+                    <i class="fas fa-lightbulb text-blue-500 mt-1"></i>
+                    <div>
+                        <h4 class="font-bold text-blue-900 text-sm mb-1">전문가 팁</h4>
+                        <p id="res-tip" class="text-blue-800 text-xs leading-relaxed opacity-80 break-keep">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const database = {
+            "head-heavy": {
+                "stiff": {
+                    premium: "아스트록스 100 ZZ, 류가 메탈릭",
+                    budget: "아스트록스 넥스트에이지",
+                    desc: "극강의 파워와 정교함을 겸비한 모델들입니다. 류가 메탈릭은 날카로운 타구감을, 100ZZ는 묵직한 한방을 선사합니다.",
+                    tip: "매우 단단한 샤프트를 휘두를 수 있는 강한 손목 힘이 필수입니다."
+                },
+                "medium": {
+                    premium: "아스트록스 88D PRO, 류가 II",
+                    budget: "아스트록스 넥스트에이지",
+                    desc: "복식 후위 공격의 정석입니다. 연타 공격을 즐기는 플레이어에게 최적화된 반발력을 제공합니다.",
+                    tip: "공격력을 유지하면서도 100ZZ보다는 조금 더 편한 조작을 원할 때 좋습니다."
+                },
+                "flexible": {
+                    premium: "아스트록스 77 PRO",
+                    budget: "빅터 팬텀",
+                    desc: "적은 힘으로도 큰 비거리를 만들어내는 공격형 라인업입니다. 유연한 스윙 메커니즘을 가진 분들께 추천합니다.",
+                    tip: "샤프트 탄성을 이용하면 손목 부담 없이도 깊숙한 스매싱이 가능합니다."
+                }
+            },
+            "even": {
+                "stiff": {
+                    premium: "아크세이버 11 PRO, 블레이드 900",
+                    budget: "드라이브 X 12 (중급형)",
+                    desc: "셔틀콕을 머금었다가 뱉는 정교한 컨트롤이 일품입니다. 모든 코스를 정밀하게 타격할 수 있는 테크니션의 무기입니다.",
+                    tip: "단단한 샤프트가 밀림 없는 정교한 컨트롤을 도와줍니다."
+                },
+                "medium": {
+                    premium: "드라이브 X 12",
+                    budget: "아크세이버 X7",
+                    desc: "안정적인 타구감과 반발력의 균형이 완벽합니다. 기복 없는 플레이를 원하는 동호인들의 스테디셀러입니다.",
+                    tip: "처음 상급 라켓에 입문하거나 스타일을 잡지 못한 분들께 가장 안전한 선택입니다."
+                },
+                "flexible": {
+                    premium: "할버텍 9000",
+                    budget: "아크세이버 X5",
+                    desc: "최상급 탄성과 부드러운 컨트롤의 조화입니다. 코트 구석구석을 찌르는 정교하고 유연한 플레이에 적합합니다.",
+                    tip: "엘보 통증이 걱정되거나 부드러운 타구감을 선호하는 분들께 추천합니다."
+                }
+            },
+            "head-light": {
+                "stiff": {
+                    premium: "나노플레어 1000Z, 800 PRO",
+                    budget: "1000 TOUR, 800 TOUR",
+                    desc: "찰나의 순간에 튕겨내는 초고속 반발력 라인업입니다. 드라이브 싸움과 전위 압박에서 최고의 성능을 냅니다.",
+                    tip: "빠른 스윙 스피드를 가진 전위 플레이어에게 최고의 무기입니다."
+                },
+                "medium": {
+                    premium: "나노플레어 700 PRO",
+                    budget: "아우라스피드 90K II (중고가형)",
+                    desc: "경쾌한 휘두름과 압도적인 편의성을 자랑합니다. 빠른 전후위 전환 플레이의 정석을 보여주는 모델입니다.",
+                    tip: "가장 대중적이고 편안한 헤드라이트의 감각을 느낄 수 있습니다."
+                },
+                "flexible": {
+                    premium: "나노플레어 NEXTAGE",
+                    budget: "드라이브 X 1L",
+                    desc: "충격 흡수가 탁월하고 다루기 매우 쉬움. 입문자나 근력이 약한 분들도 즉시 성능을 체감할 수 있습니다.",
+                    tip: "손목의 스냅을 활용하는 수비형 플레이어에게 특히 추천합니다."
+                }
+            }
+        };
+
+        let selections = { balance: null, stiffness: null };
+
+        function selectOption(key, value, element) {
+            selections[key] = value;
+            const parent = element.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('card-active'));
+            element.classList.add('card-active');
+        }
+
+        function calculateResult() {
+            if (!selections.balance || !selections.stiffness) {
+                alert("두 가지 옵션을 모두 선택해주세요!");
+                return;
+            }
+
+            const result = database[selections.balance][selections.stiffness];
+            
+            document.getElementById('res-title').innerText = result.premium.split(',')[0];
+            document.getElementById('res-premium').innerText = result.premium;
+            document.getElementById('res-budget').innerText = result.budget;
+            document.getElementById('res-desc').innerText = result.desc;
+            document.getElementById('res-tip').innerText = result.tip;
+
+            document.getElementById('main-view').classList.add('hidden');
+            document.getElementById('result-view').classList.remove('hidden');
+        }
+
+        function resetApp() {
+            selections = { balance: null, stiffness: null };
+            document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('card-active'));
+            document.getElementById('main-view').classList.remove('hidden');
+            document.getElementById('result-view').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
