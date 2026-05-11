@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>배드민턴 라켓 MBTI v7.7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 1.25rem;
+            margin-bottom: 0.8rem;
+            background: #ffffff;
+            border: 2px solid #f1f5f9;
+            border-radius: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .option-btn:hover {
+            border-color: #2563eb;
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .accent-box {
+            background: linear-gradient(135deg, #eff6ff 0%, #f8fafc 100%);
+            border: 1px solid #dbeafe;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app" class="w-full max-w-lg glass-morphism rounded-[2.5rem] shadow-2xl overflow-hidden p-8 md:p-10 m-4">
+        
+        <!-- 1. 메인 화면 -->
+        <div id="view-intro" class="fade-in">
+            <div class="text-center mb-8">
+                <div class="inline-flex p-4 bg-blue-600 text-white rounded-3xl mb-6 shadow-xl shadow-blue-100">
+                    <i class="fas fa-shuttlecock text-4xl"></i>
+                </div>
+                <h1 class="text-4xl font-extrabold text-slate-900 mb-2 tracking-tighter italic">라켓 MBTI <span class="text-blue-600">v7.7</span></h1>
+                <p class="text-slate-500 font-medium italic">"당신의 스윙에 마법을 더할 라켓을 찾아서"</p>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <div class="accent-box p-5 rounded-3xl">
+                    <h3 class="font-black text-slate-800 mb-4 flex items-center gap-2 text-sm uppercase tracking-wider">
+                        <i class="fas fa-microchip text-blue-600"></i> 라켓 선택 핵심 지표
+                    </h3>
+                    <div class="space-y-4 text-[13px]">
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+                                <i class="fas fa-balance-scale text-blue-500"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900">헤드 밸런스</span>
+                                <p class="text-slate-500 leading-snug">헤드헤비(공격형/파워) ↔ 헤드라이트(수비형/스피드)</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shrink-0 shadow-sm">
+                                <i class="fas fa-wave-square text-blue-500"></i>
+                            </div>
+                            <div>
+                                <span class="font-bold text-slate-900">샤프트 강도</span>
+                                <p class="text-slate-500 leading-snug">단단함(정교한 컨트롤) ↔ 부드러움(비거리 보완)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-slate-900 text-white p-5 rounded-[2rem] flex items-center justify-between">
+                    <div>
+                        <p class="text-[10px] text-blue-400 font-black uppercase mb-1">Beginner's Pick</p>
+                        <h4 class="text-sm font-bold italic">아펙스 725 (남) / 722 (여)</h4>
+                        <p class="text-[11px] text-slate-400 mt-1">입문자는 가성비 라켓으로 시작하세요!</p>
+                    </div>
+                    <i class="fas fa-rocket text-slate-700 text-3xl"></i>
+                </div>
+            </div>
+
+            <button onclick="startSurvey()" class="w-full py-5 bg-blue-600 text-white rounded-2xl font-bold text-xl shadow-xl hover:bg-blue-700 transition-all active:scale-95">
+                테스트 시작 <i class="fas fa-arrow-right ml-2"></i>
+            </button>
+        </div>
+
+        <!-- 2. 설문 화면 -->
+        <div id="view-survey" class="hidden fade-in">
+            <div class="mb-8">
+                <div class="flex justify-between items-end mb-2">
+                    <span id="step-info" class="text-blue-600 font-black text-2xl tracking-tighter italic">01</span>
+                    <span id="progress-val" class="text-xs text-slate-400 font-bold italic">STEP 1/4</span>
+                </div>
+                <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+                    <div id="progress-fill" class="h-full bg-blue-600 transition-all duration-300" style="width: 25%"></div>
+                </div>
+            </div>
+            <h2 id="question-text" class="text-2xl font-extrabold text-slate-900 mb-10 leading-tight break-keep italic text-center">질문 로딩...</h2>
+            <div id="options-container" class="space-y-1"></div>
+        </div>
+
+        <!-- 3. 결과 화면 -->
+        <div id="view-result" class="hidden fade-in">
+            <div class="text-center mb-8">
+                <span class="badge bg-blue-100 text-blue-600 mb-2 italic">Matching Result</span>
+                <h2 id="res-main-title" class="text-4xl font-black text-slate-900 italic tracking-tighter uppercase">MODEL</h2>
+            </div>
+
+            <div class="space-y-4 mb-8">
+                <div class="bg-white border-2 border-blue-50 rounded-3xl p-6 shadow-sm">
+                    <div class="flex gap-2 mb-4">
+                        <span class="badge bg-blue-600 text-white">Premium Choice</span>
+                        <span id="res-style-tag" class="badge bg-slate-100 text-slate-500 italic">Style</span>
+                    </div>
+                    <h3 id="res-premium-name" class="text-xl font-black text-slate-800 mb-2 italic">모델명</h3>
+                    <p id="res-description" class="text-slate-500 text-[13px] leading-relaxed break-keep font-medium italic"></p>
+                </div>
+
+                <div class="bg-slate-900 text-white rounded-3xl p-6 shadow-xl">
+                    <div class="flex gap-2 mb-4">
+                        <span class="badge bg-emerald-500 text-white">Budget Alternative</span>
+                    </div>
+                    <h3 id="res-budget-name" class="text-lg font-bold text-white mb-1 italic uppercase underline decoration-emerald-400 decoration-2 underline-offset-4">가성비 모델</h3>
+                    <p class="text-slate-400 text-[11px] leading-relaxed italic">유사한 성향을 합리적인 가격으로 경험할 수 있는 최고의 대안입니다.</p>
+                </div>
+            </div>
+
+            <!-- 다시하기 버튼: restartApp() 호출 -->
+            <button onclick="restartApp()" class="w-full py-4 bg-slate-100 text-slate-400 rounded-2xl font-bold hover:bg-slate-200 transition-all italic">
+                <i class="fas fa-redo mr-2"></i> 테스트 다시하기
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 전역 상태 변수
+        let currentStep = 0;
+        let answers = {};
+
+        const questions = [
+            {
+                key: 'exp',
+                q: "현재 배드민턴 구력이 어떻게 되시나요?",
+                options: [
+                    { t: "상급자 (3년 이상)", v: "expert", i: "fa-medal" },
+                    { t: "중급자 (1~3년)", v: "intermediate", i: "fa-walking" },
+                    { t: "입문자 (1년 미만)", v: "beginner", i: "fa-leaf" }
+                ]
+            },
+            {
+                key: 'balance',
+                q: "어떤 라켓 밸런스를 선호하시나요?",
+                options: [
+                    { t: "헤드 헤비 (파워/공격)", v: "heavy", i: "fa-fire" },
+                    { t: "이븐 밸런스 (올라운드)", v: "even", i: "fa-balance-scale" },
+                    { t: "헤드 라이트 (수비/스피드)", v: "light", i: "fa-wind" }
+                ]
+            },
+            {
+                key: 'stiffness',
+                q: "샤프트의 강도는 어떤 것이 좋나요?",
+                options: [
+                    { t: "단단함 (Stiff)", v: "stiff", i: "fa-gem" },
+                    { t: "부드러움 (Flexible)", v: "flex", i: "fa-wave-square" }
+                ]
+            },
+            {
+                key: 'brand',
+                q: "선호하는 브랜드 성향은?",
+                options: [
+                    { t: "요넥스 (YONEX)", v: "yonex", i: "fa-check-circle" },
+                    { t: "기타 (빅터/리닝 등)", v: "others", i: "fa-ellipsis-h" }
+                ]
+            }
+        ];
+
+        const database = [
+            { cond: (a)=>a.balance==='heavy'&&a.stiffness==='stiff'&&a.brand==='yonex', title: "100 ZZ", premium: "요넥스 아스트록스 100 ZZ", budget: "아스트록스 넥스트에이지", style: "파워 공격형", desc: "극강의 파워와 정교함을 겸비한 상급자용 공격형 라켓의 대명사입니다." },
+            { cond: (a)=>a.balance==='heavy'&&a.stiffness==='stiff', title: "RYUGA", premium: "빅터 류가 메탈릭", budget: "아스트록스 넥스트에이지", style: "파워 공격형", desc: "묵직한 한 방과 강력한 반발력으로 상대를 압도하는 파워 히터용입니다." },
+            { cond: (a)=>a.balance==='heavy'&&a.stiffness==='flex', title: "77 PRO", premium: "요넥스 아스트록스 77 PRO", budget: "빅터 팬텀", style: "연타 공격형", desc: "부드러운 스윙으로도 큰 비거리를 만들어내며 연속적인 공격에 유리합니다." },
+            { cond: (a)=>a.balance==='even'&&a.stiffness==='stiff'&&a.brand==='yonex', title: "11 PRO", premium: "요넥스 아크세이버 11 PRO", budget: "아크세이버 11 TOUR", style: "테크니컬 컨트롤", desc: "안정적인 홀딩력으로 모든 코스를 정교하게 공략하는 컨트롤러의 선택입니다." },
+            { cond: (a)=>a.balance==='even'&&a.stiffness==='stiff', title: "DRIVE X 12", premium: "빅터 드라이브 X 12", budget: "리닝 할버텍 7000", style: "테크니컬 컨트롤", desc: "빠른 반응성과 탄탄한 타구감으로 경기를 조율하기 최적화된 모델입니다." },
+            { cond: (a)=>a.balance==='even'&&a.stiffness==='flex', title: "HALBERTEC", premium: "리닝 할버텍 9000", budget: "아크세이버 X7", style: "올라운드 수비", desc: "부드러운 탄성과 정교한 컨트롤이 조화를 이루는 프리미엄 올라운드 라켓입니다." },
+            { cond: (a)=>a.balance==='light'&&a.stiffness==='stiff', title: "1000Z", premium: "요넥스 나노플레어 1000Z", budget: "나노플레어 1000 TOUR", style: "초고속 스피드", desc: "현존 최속의 스윙 스피드를 자랑하며 전위 압박에서 최고의 성능을 보입니다." },
+            { cond: (a)=>a.balance==='light'&&a.stiffness==='flex'&&a.exp==='beginner', title: "NEXTAGE", premium: "요넥스 나노플레어 NEXTAGE", budget: "아펙스 725", style: "입문자 가이드", desc: "손목의 부담을 줄이면서도 셔틀콕을 멀리 보내주는 입문자용 베스트셀러입니다." },
+            { cond: (a)=>a.balance==='light'&&a.stiffness==='flex', title: "700 PRO", premium: "요넥스 나노플레어 700 PRO", budget: "아우라스피드 90K II", style: "경쾌한 스피드", desc: "가장 대중적인 선택으로, 부드러운 타구감과 빠른 수비 전환이 강점입니다." },
+            { cond: (a)=>true, title: "700 PRO", premium: "요넥스 나노플레어 700 PRO", budget: "아우라스피드 90K II", style: "올라운드 스피드", desc: "성별과 구력에 관계없이 누구나 만족할 수 있는 육각형 밸런스 라켓입니다." }
+        ];
+
+        // 1. 설문 시작
+        function startSurvey() {
+            document.getElementById('view-intro').classList.add('hidden');
+            document.getElementById('view-survey').classList.remove('hidden');
+            renderQuestion();
+        }
+
+        // 2. 질문 렌더링
+        function renderQuestion() {
+            const q = questions[currentStep];
+            const progress = ((currentStep + 1) / questions.length) * 100;
+            
+            document.getElementById('step-info').innerText = (currentStep + 1).toString().padStart(2, '0');
+            document.getElementById('progress-val').innerText = `STEP ${currentStep + 1}/${questions.length}`;
+            document.getElementById('progress-fill').style.width = progress + '%';
+            document.getElementById('question-text').innerText = q.q;
+
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+
+            q.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn fade-in';
+                btn.innerHTML = `
+                    <div class="w-10 h-10 bg-slate-50 border border-slate-100 rounded-xl flex items-center justify-center text-blue-600">
+                        <i class="fas ${opt.i}"></i>
+                    </div>
+                    <span>${opt.t}</span>
+                `;
+                btn.onclick = () => selectOption(q.key, opt.v);
+                container.appendChild(btn);
+            });
+        }
+
+        // 3. 답변 선택
+        function selectOption(key, val) {
+            answers[key] = val;
+            if (currentStep < questions.length - 1) {
+                currentStep++;
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }
+
+        // 4. 결과 출력
+        function showResult() {
+            const res = database.find(r => r.cond(answers)) || database[database.length-1];
+            
+            document.getElementById('res-main-title').innerText = res.title;
+            document.getElementById('res-premium-name').innerText = res.premium;
+            document.getElementById('res-budget-name').innerText = res.budget;
+            document.getElementById('res-description').innerText = res.desc;
+            document.getElementById('res-style-tag').innerText = res.style;
+
+            document.getElementById('view-survey').classList.add('hidden');
+            document.getElementById('view-result').classList.remove('hidden');
+        }
+
+        // 5. 앱 재시작 (다시하기 핵심 로직)
+        function restartApp() {
+            // 모든 데이터 초기화
+            currentStep = 0;
+            answers = {};
+
+            // 모든 뷰 숨기기
+            document.getElementById('view-intro').classList.add('hidden');
+            document.getElementById('view-survey').classList.add('hidden');
+            document.getElementById('view-result').classList.add('hidden');
+
+            // 첫 화면(Intro) 다시 표시
+            const intro = document.getElementById('view-intro');
+            intro.classList.remove('hidden');
+            
+            // 애니메이션 재트리거를 위해 클래스 제거 후 다시 추가
+            intro.classList.remove('fade-in');
+            void intro.offsetWidth; // 리플로우 강제 발생
+            intro.classList.add('fade-in');
+        }
+    </script>
+</body>
+</html>
